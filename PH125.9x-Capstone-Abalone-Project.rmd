@@ -1,7 +1,7 @@
 ---
 title: "PH125.9x Capstone Abalone Project"
 author: "Michael W. Jones"
-date: "8/17/2020"
+date: "8/19/2020"
 output: pdf_document
 ---
 
@@ -17,8 +17,10 @@ if(!require(stringr)) install.packages("stringr", repos = "http://cran.us.r-proj
 if(!require(gridExtra)) install.packages("gridExtra", repos = "http://cran.us.r-project.org")
 if(!require(kableExtra)) install.packages("kableExtra", repos = "http://cran.us.r-project.org")
 if(!require(tinytex)) tinytex::install_tinytex()
+if(!require(PivotalR)){install.packages("PivotalR")}
 
 if(!require(PivotalR)){install.packages("PivotalR")}
+if(!require(curl)){install.packages("curl")}
 if(!require(Metrics)){install.packages("Metrics")}
 if(!require(gbm)){install.packages("gbm")}
 if(!require(gam)){install.packages("gam")}
@@ -26,11 +28,6 @@ if(!require(splines)){install.packages("splines")}
 if(!require(foreach)){install.packages("foreach")}
 if(!require(gridExtra)){install.packages("gridExtra")}
 if(!require(corrplot)){install.packages("corrplot")}
-if(!require(doMC)){
-  install.packages("doMC",
-                   repos="http://R-Forge.R-project.org")}
-
-doMC::registerDoMC(cores=4)
 
 ```
 
@@ -56,8 +53,13 @@ This project uses the information from the abalone dataset in the PivotalR libra
 
 ```{r table description, echo=FALSE}
 
+# dl <- tempfile()
+# download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
+
+# download.file("https://github.com/mike-tex/capstone/blob/master/abalone_vars.csv", "abalone_vars.csv")
+
 abalone_vars <- 
-  read.csv("abalone_vars.csv")
+  read.csv(curl("https://raw.githubusercontent.com/mike-tex/capstone/master/abalone_vars.csv"))
 
 names(abalone_vars) <- c("Name", "Data.Type",
                          "Measure", "Description")
@@ -353,7 +355,7 @@ pred_regress <-
 pred_regress <- round(pred_regress)
 ```
 
-The results from running regression analysis using various model methods is:
+The result from running regression analysis using various model methods is:
 
 ```{r print reg results, echo=F, results="asis"}
 print_regress_results %>% knitr::kable()
@@ -458,10 +460,10 @@ best_accuracy <-
   round(accuracy(pred_class, 
                  test_set_c$rgrp),digits = 5)
 tmptext <- paste0("\n\nBased on comparing accuracy",
-          " for all the models, \"",
+          " for all the models, using training data, \"",
           results$method[which.max(results$Accuracy)],
-          "\" is the best model with a ",
-          "training data accuracy of ",
+          "\" is the best model with an ",
+          "accuracy of ",
           round(max(results$Accuracy), 5), ".",
           "\n\nUsing the \"",
           class_fits[[best_class]]$method,
@@ -475,7 +477,7 @@ cat(tmptext)
 <!-- (a results section that presents the modeling results and discusses the model performance; and) -->
 
 ```{r results, echo=F, results="asis"}
-tmptxt <- paste0("Regression and classification analyses were done for multiple models.  The best result was obtained with classifiction using the \"",
+tmptxt <- paste0("Regression and classification analyses were done for multiple models.  The best result was obtained with classification using the \"",
         class_fits[[best_class]]$method,
         "\" model by segregating rings into age groups (juvenile, adult, senior).  The resulting accuracy with test data is: ",
         # round(
@@ -488,9 +490,9 @@ cat(tmptxt)
 # Conclusion
 <!-- (a conclusion section that gives a brief summary of the report, its potential impact, its limitations, and future work.) -->
 
-Given the many variables, such as food, water characteristics, and weather patterns, which are outside the scope of this dataset, predicting rings (aka age) is difficult.  Grouping age and analyzing by classification, we could get a good approximation of the abalone rings.
+Given the many variables, such as availability of food, water conditions, and weather patterns, which are outside the scope of this dataset, predicting rings (aka age) is difficult.  Grouping age and analyzing by classification, we can get a good approximation of the abalone rings.
 
-Additional work could be done on tuning the models, trying other methods, or including additional data on weather, water conditions, and food availability.
+Additional work could be done on tuning the models, trying other methods, and/or including additional data on weather, water, and food availability.
 
 \pagebreak
 ## Citations
