@@ -51,15 +51,27 @@ Additional information, such as weather patterns and location (hence food availa
 ## Overview
 This project uses the information from the abalone dataset in the PivotalR library to identify the best model for predicting rings. 
 
-```{r table description, echo=FALSE}
+```{r table description, echo=FALSE, warning=F, message=F}
 
 # dl <- tempfile()
 # download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
 
-# download.file("https://github.com/mike-tex/capstone/blob/master/abalone_vars.csv", "abalone_vars.csv")
+# download.file("https://raw.githubusercontent.com/mike-tex/capstone/master/abalone_vars.csv", "abalone_vars.csv")
 
-abalone_vars <- 
-  read.csv(curl("https://raw.githubusercontent.com/mike-tex/capstone/master/abalone_vars.csv"))
+
+# read_csv("https://raw.github.com/mike-tex/capstone/blob/master/abalone_vars.csv")
+# 
+# x <- read_csv("https://raw.githubusercontent.com/mike-tex/PH125.9x-capstone-abalone-project/master/abalone_vars.csv")
+# 
+# https://github.com/mike-tex/PH125.9x-capstone-abalone-project/blob/master/abalone_vars.csv
+# 
+# abalone_vars <- 
+#   read.csv(curl("https://raw.githubusercontent.com/mike-tex/capstone/master/abalone_vars.csv"))
+# 
+# abalone_vars <- 
+#   read.csv(curl("https://github.com/mike-tex/PH125.9x-capstone-abalone-project/blob/master/abalone_vars.csv"))
+
+abalone_vars <- read_csv("https://raw.githubusercontent.com/mike-tex/PH125.9x-capstone-abalone-project/master/abalone_vars.csv")
 
 names(abalone_vars) <- c("Name", "Data.Type",
                          "Measure", "Description")
